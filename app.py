@@ -89,7 +89,7 @@ if uploaded_file is not None:
                 if is_rgb:
                     # Fórmula clássica: 0.299*R + 0.587*G + 0.114*B
                     img_gray = cv2.cvtColor(img_array, cv2.COLOR_RGB2GRAY)
-                    st.image(img_gray, cmap="gray", use_column_width=True)
+                    st.image(img_gray,  use_column_width=True)
                 else:
                     st.warning("A imagem já está em tons de cinzento.")
                     
@@ -103,7 +103,7 @@ if uploaded_file is not None:
                     lower_bound = np.array([h_min, 50, 50])
                     upper_bound = np.array([h_max, 255, 255])
                     mask = cv2.inRange(img_hsv, lower_bound, upper_bound)
-                    st.image(mask, cmap="gray", use_column_width=True, caption="Máscara de Segmentação HSV")
+                    st.image(mask,  use_column_width=True, caption="Máscara de Segmentação HSV")
                 else:
                     st.warning("Necessita de uma imagem RGB para converter para HSV.")
 
@@ -129,13 +129,13 @@ if uploaded_file is not None:
                 else:
                     _, img_bin = cv2.threshold(img_gray, limiar, 255, cv2.THRESH_BINARY)
                     
-                st.image(img_bin, cmap="gray", use_column_width=True)
+                st.image(img_bin,  use_column_width=True)
                 
             elif op_bin == "Média Global":
                 media = int(np.mean(img_gray))
                 st.write(f"Média calculada da imagem: **{media}**")
                 _, img_bin = cv2.threshold(img_gray, media, 255, cv2.THRESH_BINARY)
-                st.image(img_bin, cmap="gray", use_column_width=True)
+                st.image(img_bin,  use_column_width=True)
 
         # ---------------------------------------------------------
         # 3. OPERADORES MORFOLÓGICOS
@@ -186,7 +186,7 @@ if uploaded_file is not None:
                 sobely = cv2.Sobel(img_gray, cv2.CV_64F, 0, 1, ksize=3)
                 sobel_mag = np.sqrt(sobelx**2 + sobely**2)
                 sobel_mag = np.uint8(255 * sobel_mag / np.max(sobel_mag))
-                st.image(sobel_mag, cmap="gray", use_column_width=True)
+                st.image(sobel_mag,  use_column_width=True)
                 
             elif op_edge == "Prewitt":
                 kernelx = np.array([[1,1,1],[0,0,0],[-1,-1,-1]])
@@ -194,12 +194,12 @@ if uploaded_file is not None:
                 prewittx = cv2.filter2D(img_gray, -1, kernelx)
                 prewitty = cv2.filter2D(img_gray, -1, kernely)
                 prewitt_mag = cv2.addWeighted(prewittx, 0.5, prewitty, 0.5, 0)
-                st.image(prewitt_mag, cmap="gray", use_column_width=True)
+                st.image(prewitt_mag,  use_column_width=True)
                 
             elif op_edge == "Laplaciano":
                 laplacian = cv2.Laplacian(img_gray, cv2.CV_64F)
                 laplacian = np.uint8(np.absolute(laplacian))
-                st.image(laplacian, cmap="gray", use_column_width=True)
+                st.image(laplacian,  use_column_width=True)
 
         # ---------------------------------------------------------
         # 6. HISTOGRAMAS
@@ -215,11 +215,11 @@ if uploaded_file is not None:
                 ax.set_xlabel('Intensidade de Píxeis')
                 ax.set_ylabel('Quantidade')
                 st.pyplot(fig)
-                st.image(img_gray, cmap="gray", use_column_width=True)
+                st.image(img_gray,  use_column_width=True)
                 
             elif op_hist == "Equalização de Histograma":
                 img_eq = cv2.equalizeHist(img_gray)
-                st.image(img_eq, cmap="gray", caption="Imagem Equalizada", use_column_width=True)
+                st.image(img_eq,  caption="Imagem Equalizada", use_column_width=True)
                 
                 st.write("Novo Histograma (Equalizado):")
                 fig, ax = plt.subplots()
@@ -270,8 +270,8 @@ if uploaded_file is not None:
             
             col_f1, col_f2 = st.columns(2)
             with col_f1:
-                st.image(img_gray, cmap="gray", caption="Imagem Original (Cinzento)", use_column_width=True)
+                st.image(img_gray,  caption="Imagem Original (Cinzento)", use_column_width=True)
             with col_f2:
-                st.image(magnitude_normalized, cmap="gray", caption="Espectro de Frequências", use_column_width=True)
+                st.image(magnitude_normalized,  caption="Espectro de Frequências", use_column_width=True)
                 
             st.info("Aqui, o centro brilhante representa as baixas frequências (áreas suaves da imagem), e os pontos afastados do centro representam as altas frequências (contornos e ruído).")    
