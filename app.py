@@ -3,6 +3,7 @@ from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 # Import das funções
 from functions.color import (
     rgb_to_gray_manual,
@@ -64,6 +65,12 @@ from utils.study_guide import (
 
 from pseudo.pseudocodes import *
 
+
+from utils.image_loader import (
+    load_sample_images,
+    load_selected_sample
+)
+
 # Configuração da página
 st.set_page_config(
     page_title="VC Toolkit",
@@ -115,23 +122,65 @@ categoria = st.sidebar.selectbox(
 if guia_estudo != "Nenhum":
     show_study_guide(guia_estudo)
     st.divider()
+    
+image = None
+img_array = None
+is_rgb = False
+    
+st.sidebar.title("Imagens de Exemplo")
+
+sample_images = load_sample_images()
+
+selected_sample = st.sidebar.selectbox(
+    "Escolha uma imagem de exemplo:",
+    ["Nenhuma"] + sample_images
+)    
 
 # -------------------------------------------------
 # Upload da imagem
 # -------------------------------------------------
 
-uploaded_file = st.file_uploader(
-    "Faça upload da imagem",
-    type=["ppm", "pgm", "pbm", "jpg", "jpeg", "png"]
-)
+if selected_sample != "Nenhuma":
 
-if uploaded_file is not None:
+    image, img_array, is_rgb = load_selected_sample(
+        selected_sample
+    )
 
-    image = Image.open(uploaded_file)
-    img_array = np.array(image)
+else:
+    uploaded_file = st.file_uploader(
+        "Faça upload da imagem",
+        type=["ppm", "pgm", "pbm", "jpg", "jpeg", "png"]
+    )
 
-    is_rgb = len(img_array.shape) == 3
+    if uploaded_file is not None:
+        image = Image.open(uploaded_file)
+        img_array = np.array(image)
+        is_rgb = len(img_array.shape) == 3
 
+# -----------------------------
+# Só continua se existir imagem
+# -----------------------------
+
+if img_array is not None:
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.subheader("Imagem Original")
+
+        st.image(
+            image,
+            use_container_width=True
+        )
+
+        st.write(f"Dimensões: {img_array.shape}")
+
+        if is_rgb:
+            st.write("Formato: RGB")
+        else:
+            st.write("Formato: Tons de Cinzento")
+            
+            
     # Informações básicas da imagem
     st.write(f"**Dimensões:** {img_array.shape}")
     if is_rgb:
@@ -139,8 +188,8 @@ if uploaded_file is not None:
     else:
         st.write("**Formato:** Tons de Cinzento")
 
-    # =====================================================
-    # 1. ESPAÇOS de Cor
+# =====================================================
+# 1. ESPAÇOS DE COR
     # =====================================================
     if categoria == "Espaços de Cor":
 
