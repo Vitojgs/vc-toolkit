@@ -4,8 +4,25 @@ import cv2
 from PIL import Image
 import matplotlib.pyplot as plt
 
+
 # Configuração da página
 st.set_page_config(page_title="VC Toolkit - IPCA", layout="wide")
+
+# --- AS SUAS FUNÇÕES MANUAIS AQUI ---
+def minha_binarizacao_manual(imagem_gray, limiar):
+    altura, largura = imagem_gray.shape
+    nova_imagem = np.zeros((altura, largura), dtype=np.uint8)
+    
+    # Simulação dos ciclos 'for' do C (Aviso: Em Python isto é mais lento!)
+    for y in range(altura):
+        for x in range(largura):
+            if imagem_gray[y, x] >= limiar:
+                nova_imagem[y, x] = 255
+            else:
+                nova_imagem[y, x] = 0
+                
+    return nova_imagem
+# ------------------------------------
 
 st.title("🛠️ Visão por Computador - Toolkit de Funções")
 st.write("Projeto desenvolvido para testar os algoritmos lecionados na disciplina.")
@@ -96,12 +113,22 @@ if uploaded_file is not None:
         elif categoria == "2. Segmentação e Binarização":
             op_bin = st.sidebar.radio("Função:", ["Threshold Manual", "Média Global"])
             
+            # Nova opção para o professor!
+            usar_codigo_manual = st.sidebar.checkbox("Usar implementação manual (Ciclos For / Estilo C)", value=False)
+            
             # Converter para gray se for RGB
             img_gray = cv2.cvtColor(img_array, cv2.COLOR_RGB2GRAY) if is_rgb else img_array.copy()
             
             if op_bin == "Threshold Manual":
                 limiar = st.sidebar.slider("Valor do Threshold", 0, 255, 128)
-                _, img_bin = cv2.threshold(img_gray, limiar, 255, cv2.THRESH_BINARY)
+                
+                if usar_codigo_manual:
+                    st.warning("A executar código manual pixel a pixel... Pode demorar alguns segundos dependendo do tamanho da imagem!")
+                    img_bin = minha_binarizacao_manual(img_gray, limiar)
+                    st.success("Binarização manual concluída com sucesso!")
+                else:
+                    _, img_bin = cv2.threshold(img_gray, limiar, 255, cv2.THRESH_BINARY)
+                    
                 st.image(img_bin, cmap="gray", use_column_width=True)
                 
             elif op_bin == "Média Global":
