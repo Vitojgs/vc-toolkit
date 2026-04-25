@@ -120,5 +120,62 @@ def blob_properties_manual(labels, total_labels):
     return propriedades
 
 
+def colorize_labels(labels):
+    """
+    Converte a imagem de etiquetas numa imagem colorida.
+    
+    Cada blob tem uma cor diferente usando uma paleta vibrante.
+    O fundo (label=0) aparece em branco.
+
+    Parâmetros:
+        labels -> imagem etiquetada (inteiros)
+
+    Retorna:
+        imagem RGB colorida com cores vibrantes
+    """
+
+    altura, largura = labels.shape
+
+    # Inicializa com branco (fundo)
+    img_colored = np.ones(
+        (altura, largura, 3),
+        dtype=np.uint8
+    ) * 255
+
+    total_labels = np.max(labels)
+
+    # Paleta de cores MUITO vibrantes (RGB)
+    cores_paleta = [
+        (255, 0, 0),       # Vermelho puro
+        (0, 255, 0),       # Verde puro
+        (0, 0, 255),       # Azul puro
+        (255, 255, 0),     # Amarelo puro
+        (255, 0, 255),     # Magenta puro
+        (0, 255, 255),     # Ciano puro
+        (255, 128, 0),     # Laranja
+        (128, 0, 255),     # Roxo escuro
+        (255, 0, 128),     # Rosa quente
+        (0, 255, 128),     # Verde-ciano
+        (128, 255, 0),     # Lima brilhante
+        (0, 128, 255),     # Azul-claro
+        (255, 192, 0),     # Ouro
+        (128, 0, 128),     # Roxo escuro
+        (0, 128, 128),     # Azul-escuro
+        (255, 64, 64),     # Vermelho-coral
+        (64, 255, 64),     # Verde-brilhante
+        (64, 64, 255),     # Azul-brilhante
+    ]
+
+    for label in range(1, total_labels + 1):
+        # Seleciona cor da paleta (com repetição se necessário)
+        cor_idx = (label - 1) % len(cores_paleta)
+        cor = cores_paleta[cor_idx]
+
+        mask = labels == label
+        img_colored[mask] = cor
+
+    return img_colored
+
+
 
 

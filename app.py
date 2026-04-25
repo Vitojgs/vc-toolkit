@@ -44,7 +44,8 @@ from functions.histogram import (
 
 from functions.blobs import (
     blob_count_manual,
-    blob_properties_manual
+    blob_properties_manual,
+    colorize_labels
 )
 
 from functions.fourier import (
@@ -1570,92 +1571,92 @@ if uploaded_file is not None:
             )
 
 
-    # ---------------------------------
-    # Equalização de Histograma
-    # ---------------------------------
-    elif operacao == "Equalização de Histograma":
+        # ---------------------------------
+        # Equalização de Histograma
+        # ---------------------------------
+        elif operacao == "Equalização de Histograma":
 
-        # Converter para grayscale se necessário
-        if is_rgb:
-            img_gray = rgb_to_gray_manual(img_array)
-        else:
-            img_gray = img_array.copy()
+            # Converter para grayscale se necessário
+            if is_rgb:
+                img_gray = rgb_to_gray_manual(img_array)
+            else:
+                img_gray = img_array.copy()
 
-        img_result = histogram_equalization_manual(
-            img_gray
-        )
-
-        hist_original = calculate_histogram_manual(
-            img_gray
-        )
-
-        hist_equalized = calculate_histogram_manual(
-            img_result
-        )
-
-        st.write("### Imagem Original")
-        st.image(image, use_container_width=True)
-
-        st.write("### Resultado")
-
-        col_a, col_b = st.columns(2)
-
-        with col_a:
-            st.image(
-                img_gray,
-                use_container_width=True,
-                caption="Imagem Original"
+            img_result = histogram_equalization_manual(
+                img_gray
             )
 
-        with col_b:
-            st.image(
-                img_result,
-                use_container_width=True,
-                caption="Imagem Equalizada"
+            hist_original = calculate_histogram_manual(
+                img_gray
             )
 
-        image_bytes = convert_numpy_to_downloadable_image(
-           img_result
-        )
+            hist_equalized = calculate_histogram_manual(
+                img_result
+            )
 
-        st.download_button(
-            label="Download da Imagem Equalizada",
-            data=image_bytes,
-            file_name="histograma_equalizado.png",
-            mime="image/png"
-        )
+            st.write("### Imagem Original")
+            st.image(image, use_container_width=True)
 
-        st.write("### Comparação dos Histogramas")
+            st.write("### Resultado")
 
-        fig1, ax1 = plt.subplots()
+            col_a, col_b = st.columns(2)
 
-        ax1.bar(
-            range(256),
-            hist_original
-        )
+            with col_a:
+                st.image(
+                    img_gray,
+                    use_container_width=True,
+                    caption="Imagem Original"
+                )
 
-        ax1.set_title("Histograma Original")
-        ax1.set_xlabel("Intensidade")
-        ax1.set_ylabel("Pixels")
+            with col_b:
+                st.image(
+                    img_result,
+                    use_container_width=True,
+                    caption="Imagem Equalizada"
+                )
 
-        st.pyplot(fig1)
+            image_bytes = convert_numpy_to_downloadable_image(
+               img_result
+            )
 
-        fig2, ax2 = plt.subplots()
+            st.download_button(
+                label="Download da Imagem Equalizada",
+                data=image_bytes,
+                file_name="histograma_equalizado.png",
+                mime="image/png"
+            )
 
-        ax2.bar(
-            range(256),
-            hist_equalized
-        )
+            st.write("### Comparação dos Histogramas")
 
-        ax2.set_title("Histograma Equalizado")
-        ax2.set_xlabel("Intensidade")
-        ax2.set_ylabel("Pixels")
+            fig1, ax1 = plt.subplots()
 
-        st.pyplot(fig2)
+            ax1.bar(
+                range(256),
+                hist_original
+            )
 
-        st.write("### Explicação Teórica")
+            ax1.set_title("Histograma Original")
+            ax1.set_xlabel("Intensidade")
+            ax1.set_ylabel("Pixels")
 
-        st.write("""
+            st.pyplot(fig1)
+
+            fig2, ax2 = plt.subplots()
+
+            ax2.bar(
+                range(256),
+                hist_equalized
+            )
+
+            ax2.set_title("Histograma Equalizado")
+            ax2.set_xlabel("Intensidade")
+            ax2.set_ylabel("Pixels")
+
+            st.pyplot(fig2)
+
+            st.write("### Explicação Teórica")
+
+            st.write("""
     A equalização de histograma melhora o contraste
     da imagem redistribuindo as intensidades dos pixels.
 
@@ -1674,12 +1675,12 @@ if uploaded_file is not None:
     para criar uma nova distribuição tonal.
         """)
 
-        st.write("### Pseudocódigo")
+            st.write("### Pseudocódigo")
 
-        st.code(
-            pseudo_histogram_equalization(),
-            language="text"
-        )        
+            st.code(
+                pseudo_histogram_equalization(),
+                language="text"
+            )        
 
 
 
@@ -1691,7 +1692,8 @@ if uploaded_file is not None:
         operacao = st.sidebar.radio(
             "Escolha a função:",
             [
-                "Blob Labelling"
+                "Blob Labelling",
+                "Área e Centro de Massa"
             ]
         )
 
@@ -1791,65 +1793,93 @@ if uploaded_file is not None:
         # ---------------------------------
         elif operacao == "Área e Centro de Massa":
 
-        # Converter para grayscale se necessário
-        if is_rgb:
-            img_gray = rgb_to_gray_manual(img_array)
-        else:
-            img_gray = img_array.copy()
+            # Converter para grayscale se necessário
+            if is_rgb:
+                img_gray = rgb_to_gray_manual(img_array)
+            else:
+                img_gray = img_array.copy()
 
-        # Threshold inicial
-        threshold_value = st.sidebar.slider(
-            "Threshold para binarização",
-            0,
-            255,
-            128
-        )
+            # Threshold inicial
+            threshold_value = st.sidebar.slider(
+                "Threshold para binarização",
+                0,
+                255,
+                128
+            )
 
-        img_binary = threshold_manual(
-            img_gray,
-            threshold_value
-        )
+            img_binary = threshold_manual(
+                img_gray,
+                threshold_value
+            )
 
-        labels, total_blobs = blob_count_manual(
-            img_binary
-        )
+            labels, total_blobs = blob_count_manual(
+                img_binary
+            )
 
-        propriedades = blob_properties_manual(
-            labels,
-            total_blobs
-        )
+            propriedades = blob_properties_manual(
+                labels,
+                total_blobs
+            )
 
-        st.write("### Imagem Original")
-        st.image(image, use_container_width=True)
+            st.write("### Imagem Original")
+            st.image(image, use_container_width=True)
 
-        st.write("### Resultado")
+            st.write("### Resultado")
 
-        st.image(
-            img_binary,
-            use_container_width=True,
-            caption="Imagem Binária"
-        )
+            col_bin, col_labeled = st.columns(2)
 
-        st.write("### Propriedades dos Blobs")
-
-        if len(propriedades) > 0:
-
-            for blob in propriedades:
-                st.write(
-                    f"""
-    Blob {blob['label']}
-
-    - Área: {blob['area']} pixels
-    - Centro de Massa: {blob['centroid']}
-                    """
+            with col_bin:
+                st.image(
+                    img_binary,
+                    use_container_width=True,
+                    caption="Imagem Binária"
                 )
 
-        else:
-            st.warning("Nenhum blob encontrado.")
+            with col_labeled:
+                img_labeled_colored = colorize_labels(labels)
+                st.image(
+                    img_labeled_colored,
+                    use_container_width=True,
+                    caption="Imagem Etiquetada (Colorida)"
+                )
 
-        st.write("### Explicação Teórica")
+            st.write("### Propriedades dos Blobs")
 
-        st.write("""
+            if len(propriedades) > 0:
+
+                st.success(f"✓ Total de blobs encontrados: {len(propriedades)}")
+
+                # Criar tabela com as propriedades
+                blob_data = []
+                for blob in propriedades:
+                    blob_data.append({
+                        "Blob ID": blob['label'],
+                        "Área (pixels)": blob['area'],
+                        "Centro X": blob['centroid'][0],
+                        "Centro Y": blob['centroid'][1]
+                    })
+
+                st.table(blob_data)
+
+                # Mostrar detalhes de cada blob
+                st.write("**Detalhes de cada Blob:**")
+                
+                for i, blob in enumerate(propriedades, 1):
+                    with st.expander(f"🔍 Blob {blob['label']} - Área: {blob['area']} pixels"):
+                        col1, col2 = st.columns(2)
+                        
+                        with col1:
+                            st.metric("Área", f"{blob['area']} pixels")
+                        
+                        with col2:
+                            st.metric("Centro de Massa", f"({blob['centroid'][0]}, {blob['centroid'][1]})")
+
+            else:
+                st.warning("Nenhum blob encontrado. Tente ajustar o threshold para detectar objetos.")
+
+            st.write("### Explicação Teórica")
+
+            st.write("""
     Depois da etiquetagem dos blobs,
     podemos calcular propriedades importantes
     de cada objeto.
@@ -1870,12 +1900,12 @@ if uploaded_file is not None:
     - visão industrial
         """)
 
-        st.write("### Pseudocódigo")
+            st.write("### Pseudocódigo")
 
-        st.code(
-            pseudo_blob_properties(),
-            language="text"
-        )
+            st.code(
+                pseudo_blob_properties(),
+                language="text"
+            )
 
 
     # =====================================================
@@ -1970,15 +2000,14 @@ if uploaded_file is not None:
                 language="text"
             )
 
+        # ---------------------------------
+        # Filtro Passa-Baixo FFT
+        # ---------------------------------
+        elif operacao == "Filtro Passa-Baixo FFT":
 
-    # ---------------------------------
-    # Filtro Passa-Baixo FFT
-    # ---------------------------------
-    elif operacao == "Filtro Passa-Baixo FFT":
+            st.write("### Explicação Teórica")
 
-        st.write("### Explicação Teórica")
-
-        st.write("""
+            st.write("""
     O filtro passa-baixo no domínio da frequência
     mantém apenas as baixas frequências da imagem.
 
@@ -2004,69 +2033,68 @@ if uploaded_file is not None:
     a um filtro espacial de suavização.
         """)
 
-        st.write("### Pseudocódigo")
+            st.write("### Pseudocódigo")
 
-        st.code(
-            pseudo_low_pass_fft(),
-            language="text"
-        )
+            st.code(
+                pseudo_low_pass_fft(),
+                language="text"
+            )
 
-        # Converter para grayscale se necessário
-        if is_rgb:
-            img_gray = rgb_to_gray_manual(img_array)
-        else:
-            img_gray = img_array.copy()
+            # Converter para grayscale se necessário
+            if is_rgb:
+                img_gray = rgb_to_gray_manual(img_array)
+            else:
+                img_gray = img_array.copy()
 
-        radius = st.sidebar.slider(
-            "Raio do Filtro",
-            5,
-            100,
-            30
-        )
+            radius = st.sidebar.slider(
+                "Raio do Filtro",
+                5,
+                100,
+                30
+            )
 
-        img_result = low_pass_filter_fft(
-            img_gray,
-            radius
-        )
-
-        st.write("### Resultado")
-
-        col_a, col_b = st.columns(2)
-
-        with col_a:
-            st.image(
+            img_result = low_pass_filter_fft(
                 img_gray,
-                use_container_width=True,
-                caption="Imagem Original"
+                radius
             )
 
-        with col_b:
-            st.image(
-                img_result,
-                use_container_width=True,
-                caption=f"Filtro Passa-Baixo FFT (Raio = {radius})"
+            st.write("### Resultado")
+
+            col_a, col_b = st.columns(2)
+
+            with col_a:
+                st.image(
+                    img_gray,
+                    use_container_width=True,
+                    caption="Imagem Original"
+                )
+
+            with col_b:
+                st.image(
+                    img_result,
+                    use_container_width=True,
+                    caption=f"Filtro Passa-Baixo FFT (Raio = {radius})"
+                )
+
+            image_bytes = convert_numpy_to_downloadable_image(
+               img_result
             )
 
-        image_bytes = convert_numpy_to_downloadable_image(
-           img_result
-        )
+            st.download_button(
+                label="Download do Filtro Passa-Baixo",
+                data=image_bytes,
+                file_name="low_pass_fft.png",
+                mime="image/png"
+            )
 
-        st.download_button(
-            label="Download da Imagem Equalizada",
-            data=image_bytes,
-            file_name="histograma_equalizado.png",
-            mime="image/png"
-        )
+        # ---------------------------------
+        # Filtro Passa-Alto FFT
+        # ---------------------------------
+        elif operacao == "Filtro Passa-Alto FFT":
 
+            st.write("### Explicação Teórica")
 
-    # ---------------------------------
-    # Filtro Passa-Alto FFT
-    # ---------------------------------
-    elif operacao == "Filtro Passa-Alto FFT":
-
-        st.write("### Explicação Teórica")
-
-        st.write("""
+            st.write("""
     O filtro passa-alto no domínio da frequência
     remove as baixas frequências da imagem
     e mantém apenas as altas frequências.
@@ -2093,56 +2121,56 @@ if uploaded_file is not None:
     de contornos no domínio da frequência.
         """)
 
-        st.write("### Pseudocódigo")
+            st.write("### Pseudocódigo")
 
-        st.code(
-            pseudo_high_pass_fft(),
-            language="text"
-        )
+            st.code(
+                pseudo_high_pass_fft(),
+                language="text"
+            )
 
-        # Converter para grayscale se necessário
-        if is_rgb:
-            img_gray = rgb_to_gray_manual(img_array)
-        else:
-            img_gray = img_array.copy()
+            # Converter para grayscale se necessário
+            if is_rgb:
+                img_gray = rgb_to_gray_manual(img_array)
+            else:
+                img_gray = img_array.copy()
 
-        radius = st.sidebar.slider(
-            "Raio da Região Removida",
-            5,
-            100,
-            30
-        )
+            radius = st.sidebar.slider(
+                "Raio da Região Removida",
+                5,
+                100,
+                30
+            )
 
-        img_result = high_pass_filter_fft(
-            img_gray,
-            radius
-        )
-
-        st.write("### Resultado")
-
-        col_a, col_b = st.columns(2)
-
-        with col_a:
-            st.image(
+            img_result = high_pass_filter_fft(
                 img_gray,
-                use_container_width=True,
-                caption="Imagem Original"
+                radius
             )
 
-        with col_b:
-            st.image(
-                img_result,
-                use_container_width=True,
-                caption=f"Filtro Passa-Alto FFT (Raio = {radius})"
-            )
-        image_bytes = convert_numpy_to_downloadable_image(
-           img_result
-        )
+            st.write("### Resultado")
 
-        st.download_button(
-            label="Download da Imagem Equalizada",
-            data=image_bytes,
-            file_name="histograma_equalizado.png",
-            mime="image/png"
-        )    
+            col_a, col_b = st.columns(2)
+
+            with col_a:
+                st.image(
+                    img_gray,
+                    use_container_width=True,
+                    caption="Imagem Original"
+                )
+
+            with col_b:
+                st.image(
+                    img_result,
+                    use_container_width=True,
+                    caption=f"Filtro Passa-Alto FFT (Raio = {radius})"
+                )
+            image_bytes = convert_numpy_to_downloadable_image(
+               img_result
+            )
+
+            st.download_button(
+                label="Download do Filtro Passa-Alto",
+                data=image_bytes,
+                file_name="high_pass_fft.png",
+                mime="image/png"
+            )    
 
