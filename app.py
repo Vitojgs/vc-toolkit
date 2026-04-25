@@ -42,7 +42,8 @@ if uploaded_file is not None:
          "4. Filtros Espaciais (Passa-Baixo)",
          "5. Deteção de Contornos e Passa-Alto",
          "6. Histogramas",
-         "7. Blobs e Etiquetagem")
+         "7. Blobs e Etiquetagem",
+         "8. Domínio das Frequências (Fourier)") # <-- NOVA CATEGORIA AQUI
     )
     
     with col2:
@@ -220,3 +221,30 @@ if uploaded_file is not None:
                 
             st.image(img_colorida, use_column_width=True, caption=f"Foram detetados {num_labels - 1} Blobs.")
             st.write("*(Nota: Cada cor representa um blob/objeto distinto)*")
+            
+            
+        # ---------------------------------------------------------
+        # 8. DOMÍNIO DAS FREQUÊNCIAS (FOURIER)
+        # ---------------------------------------------------------
+        elif categoria == "8. Domínio das Frequências (Fourier)":
+            st.write("Análise da imagem no domínio das frequências (Espectro).")
+            
+            img_gray = cv2.cvtColor(img_array, cv2.COLOR_RGB2GRAY) if is_rgb else img_array.copy()
+            
+            # 1. Calcular a Transformada de Fourier (FFT)
+            f = np.fft.fft2(img_gray)
+            fshift = np.fft.fftshift(f) # Centrar as frequências baixas
+            
+            # Calcular o espectro de magnitude para visualização
+            magnitude_spectrum = 20 * np.log(np.abs(fshift) + 1)
+            
+            # Normalizar para visualização no Streamlit (0 a 255)
+            magnitude_normalized = cv2.normalize(magnitude_spectrum, None, 0, 255, cv2.NORM_MINMAX, dtype=cv2.CV_8U)
+            
+            col_f1, col_f2 = st.columns(2)
+            with col_f1:
+                st.image(img_gray, cmap="gray", caption="Imagem Original (Cinzento)", use_column_width=True)
+            with col_f2:
+                st.image(magnitude_normalized, cmap="gray", caption="Espectro de Frequências", use_column_width=True)
+                
+            st.info("Aqui, o centro brilhante representa as baixas frequências (áreas suaves da imagem), e os pontos afastados do centro representam as altas frequências (contornos e ruído).")    
