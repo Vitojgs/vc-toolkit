@@ -1,75 +1,139 @@
-# 🛠️ VC Toolkit - Visão por Computador
+# VC Toolkit — Visão por Computador
 
-[![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)](https://www.python.org/)
-[![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=Streamlit&logoColor=white)](https://streamlit.io/)
-[![OpenCV](https://img.shields.io/badge/opencv-%23white.svg?style=for-the-badge&logo=opencv&logoColor=white)](https://opencv.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Python](https://img.shields.io/badge/Python-3.10+-blue)
+![Streamlit](https://img.shields.io/badge/Streamlit-Deployed-red)
+![OpenCV](https://img.shields.io/badge/OpenCV-Computer%20Vision-green)
+![Status](https://img.shields.io/badge/Status-Acad%C3%A9mico-success)
+![License](https://img.shields.io/badge/License-Educational-lightgrey)
 
-O **VC Toolkit** é uma aplicação web interativa desenvolvida em Python para a disciplina de **Visão por Computador**. O objetivo principal é servir como um ambiente de testes para os algoritmos de processamento de imagem lecionados, permitindo comparar implementações manuais (estilo C/Pseudocódigo) com funções otimizadas de bibliotecas como OpenCV.
+Projeto académico desenvolvido em Python + Streamlit para estudo, teste e demonstração de algoritmos fundamentais de Visão por Computador.
 
----
-
-## 🚀 Funcionalidades
-
-A aplicação permite efetuar o upload de imagens (incluindo formatos Netpbm como **.ppm** e **.pgm**) e aplicar as seguintes operações:
-
-* **🎨 Espaços de Cor:** Negativo, extração de canais RGB, conversão para tons de cinzento e segmentação HSV.
-* **🌓 Segmentação:** Binarização por limiar (threshold) manual e global (média).
-* **🧊 Operadores Morfológicos:** Dilatação, Erosão, Abertura e Fecho com kernels ajustáveis.
-* **🔍 Filtros Espaciais:**
-    * *Passa-Baixo:* Média, Mediana e Gaussiano.
-    * *Passa-Alto / Contornos:* Sobel, Prewitt e Laplaciano.
-* **📊 Análise de Dados:** Visualização e equalização de histogramas.
-* **🟢 Blobs & Etiquetagem:** Identificação e contagem de componentes conectados.
-* **🌀 Domínio das Frequências:** Visualização do Espectro de Magnitude através da Transformada de Fourier (FFT).
+Este projeto permite carregar imagens (.ppm, .pgm, .pbm, .jpg, .png, .jpeg) e aplicar operações manuais implementadas em Python, acompanhadas por explicação teórica e pseudocódigo.
 
 ---
 
-## 🧪 Implementação Didática
+# Objetivo
 
-Um diferencial deste projeto é a inclusão de uma **implementação manual pixel a pixel** para funções críticas (como a binarização), permitindo validar a lógica do pseudocódigo discutido em aula frente às implementações nativas do OpenCV.
+Criar uma plataforma interativa que permita testar e compreender os principais algoritmos abordados na disciplina de Visão por Computador.
 
----
+O foco principal do projeto é:
 
-## 🛠️ Instalação e Execução Local
-
-1.  **Clonar o repositório:**
-    ```bash
-    git clone [https://github.com/teu-utilizador/vc-toolkit.git](https://github.com/teu-utilizador/vc-toolkit.git)
-    cd vc-toolkit
-    ```
-
-2.  **Instalar dependências:**
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-3.  **Correr a aplicação:**
-    ```bash
-    streamlit run app.py
-    ```
+- implementação manual dos algoritmos
+- utilização de pseudocódigo académico
+- comparação visual dos resultados
+- compreensão prática da teoria
 
 ---
 
-## 🌐 Deploy
+# Funcionalidades Implementadas
 
-A aplicação está configurada para ser alojada no **Streamlit Community Cloud**. Basta conectar este repositório ao serviço para ter o seu toolkit online.
+## 1. Espaços de Cor
 
----
-
-## 📄 Requisitos do Sistema
-
-As bibliotecas necessárias estão listadas no `requirements.txt`:
-* `streamlit`
-* `numpy`
-* `opencv-python-headless`
-* `Pillow`
-* `matplotlib`
+- RGB para Gray
+- Negativo
+- Extração de Canais RGB
+- RGB para HSV
+- Segmentação HSV
 
 ---
 
-## 👨‍💻 Autor
+## 2. Segmentação
 
-* **Teu Nome** - [Teu GitHub](https://github.com/teu-utilizador)
-* Unidade Curricular: **Visão por Computador**
-* Instituição: **IPCA - Instituto Politécnico do Cávado e do Ave**
+- Threshold Manual
+- Threshold por Média Global
+
+---
+
+## 3. Operadores Morfológicos
+
+- Dilatação
+- Erosão
+- Abertura (Opening)
+- Fecho (Closing)
+
+---
+
+## 4. Filtros Espaciais
+
+### Passa-Baixo
+
+- Filtro da Média
+- Filtro da Mediana
+- Filtro Gaussiano
+
+---
+
+## 5. Deteção de Contornos
+
+### Passa-Alto
+
+- Sobel
+- Prewitt
+- Roberts
+- Laplaciano
+
+---
+
+## 6. Histogramas
+
+- Histograma Gray
+- Equalização de Histograma
+
+---
+
+## 7. Blobs e Etiquetagem
+
+- Blob Labelling
+- Área dos Blobs
+- Centro de Massa
+
+---
+
+## 8. Fourier
+
+- FFT e Espectro de Frequências
+- Filtro Passa-Baixo FFT
+- Filtro Passa-Alto FFT
+
+---
+
+# Tecnologias Utilizadas
+
+- Python
+- Streamlit
+- NumPy
+- OpenCV
+- Pillow
+- Matplotlib
+
+---
+
+# Estrutura do Projeto
+
+```text
+vc-toolkit/
+│
+├── app.py
+│
+├── functions/
+│   ├── color.py
+│   ├── segmentation.py
+│   ├── morphology.py
+│   ├── filters.py
+│   ├── edges.py
+│   ├── histogram.py
+│   ├── blobs.py
+│   └── fourier.py
+│
+├── pseudo/
+│   └── pseudocodes.py
+│
+├── utils/
+│   ├── image_loader.py
+│   └── helpers.py
+│
+├── samples/
+│
+├── requirements.txt
+│
+└── README.md
