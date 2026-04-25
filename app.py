@@ -2,6 +2,7 @@ import streamlit as st
 from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
+import cv2
 
 
 # Import das funções
@@ -192,7 +193,11 @@ if img_array is not None:
 # 1. ESPAÇOS DE COR
     # =====================================================
     if categoria == "Espaços de Cor":
-
+        
+        comparar_opencv = st.sidebar.checkbox(
+           "Comparar com OpenCV",
+            value=False
+)
         operacao = st.sidebar.radio(
             "Escolha a função:",
             [
@@ -211,20 +216,59 @@ if img_array is not None:
 
             if is_rgb:
 
-                img_result = rgb_to_gray_manual(img_array)
+                img_manual = rgb_to_gray_manual(
+                    img_array
+            )
 
-                st.write("### Imagem Original")
-                st.image(image, use_container_width=True)
+            if comparar_opencv:
+
+                img_opencv = cv2.cvtColor(
+                    img_array,
+                    cv2.COLOR_RGB2GRAY
+                )
+
+                difference = cv2.absdiff(
+                    img_manual,
+                    img_opencv
+                )
+
+                st.write("### Comparação Manual vs OpenCV")
+
+                col_a, col_b, col_c = st.columns(3)
+
+                with col_a:
+                    st.image(
+                        img_manual,
+                        use_container_width=True,
+                        caption="Implementação Manual"
+                    )
+
+                with col_b:
+                    st.image(
+                        img_opencv,
+                        use_container_width=True,
+                        caption="OpenCV"
+                    )
+
+                with col_c:
+                    st.image(
+                        difference,
+                        use_container_width=True,
+                        caption="Diferença"
+                    )
+
+            else:
 
                 st.write("### Resultado")
+
                 st.image(
-                    img_result,
+                    img_manual,
                     use_container_width=True,
                     caption="Conversão Manual RGB para Gray"
                 )
 
                 image_bytes = convert_numpy_to_downloadable_image(
-                    img_result
+                    img_manual
                 )
 
                 st.download_button(
