@@ -194,10 +194,6 @@ if img_array is not None:
     # =====================================================
     if categoria == "Espaços de Cor":
         
-        comparar_opencv = st.sidebar.checkbox(
-           "Comparar com OpenCV",
-            value=False
-)
         operacao = st.sidebar.radio(
             "Escolha a função:",
             [
@@ -218,69 +214,73 @@ if img_array is not None:
 
                 img_manual = rgb_to_gray_manual(
                     img_array
-            )
-
-            if comparar_opencv:
-
-                img_opencv = cv2.cvtColor(
-                    img_array,
-                    cv2.COLOR_RGB2GRAY
                 )
 
-                difference = cv2.absdiff(
-                    img_manual,
-                    img_opencv
+                comparar_opencv = st.checkbox(
+                    "Comparar com OpenCV?"
                 )
 
-                st.write("### Comparação Manual vs OpenCV")
+                if comparar_opencv:
 
-                col_a, col_b, col_c = st.columns(3)
+                    img_opencv = cv2.cvtColor(
+                        img_array,
+                        cv2.COLOR_RGB2GRAY
+                    )
 
-                with col_a:
+                    difference = cv2.absdiff(
+                        img_manual,
+                        img_opencv
+                    )
+
+                    st.write("### Comparação Manual vs OpenCV")
+
+                    col_a, col_b, col_c = st.columns(3)
+
+                    with col_a:
+                        st.image(
+                            img_manual,
+                            use_container_width=True,
+                            caption="Implementação Manual"
+                        )
+
+                    with col_b:
+                        st.image(
+                            img_opencv,
+                            use_container_width=True,
+                            caption="OpenCV"
+                        )
+
+                    with col_c:
+                        st.image(
+                            difference,
+                            use_container_width=True,
+                            caption="Diferença"
+                        )
+
+                else:
+
+                    st.write("### Resultado")
+
                     st.image(
                         img_manual,
                         use_container_width=True,
-                        caption="Implementação Manual"
+                        caption="Conversão Manual RGB para Gray"
                     )
 
-                with col_b:
-                    st.image(
-                        img_opencv,
-                        use_container_width=True,
-                        caption="OpenCV"
+                    image_bytes = convert_numpy_to_downloadable_image(
+                        img_manual
                     )
 
-                with col_c:
-                    st.image(
-                        difference,
-                        use_container_width=True,
-                        caption="Diferença"
+                    st.download_button(
+                        label="Download da Imagem Processada",
+                        data=image_bytes,
+                        file_name="rgb_to_gray.png",
+                        mime="image/png"
                     )
 
-            else:
+                    st.write("### Explicação Teórica")
 
-                st.write("### Resultado")
-
-                st.image(
-                    img_manual,
-                    use_container_width=True,
-                    caption="Conversão Manual RGB para Gray"
-                )
-
-                image_bytes = convert_numpy_to_downloadable_image(
-                    img_manual
-                )
-
-                st.download_button(
-                    label="Download da Imagem Processada",
-                    data=image_bytes,
-                    file_name="rgb_to_gray.png",
-                    mime="image/png"
-                )
-
-                st.write("### Explicação Teórica")
-
-                st.write("""
+                    st.write("""
     A conversão de RGB para tons de cinzento não deve ser feita por média simples.
 
     É utilizada uma média ponderada porque o olho humano percebe
@@ -292,12 +292,12 @@ if img_array is not None:
     Gray = 0.299 × R + 0.587 × G + 0.114 × B
                 """)
 
-                st.write("### Pseudocódigo")
+                    st.write("### Pseudocódigo")
 
-                st.code(
-                    pseudo_rgb_to_gray(),
-                    language="text"
-                )
+                    st.code(
+                        pseudo_rgb_to_gray(),
+                        language="text"
+                    )
 
             else:
                 st.warning("A imagem já está em tons de cinzento.")
@@ -610,24 +610,73 @@ if img_array is not None:
                 128
             )
 
-            img_result = threshold_manual(
+            img_manual = threshold_manual(
                 img_gray,
                 threshold_value
+            )
+
+            comparar_opencv = st.checkbox(
+                "Comparar com OpenCV?"
             )
 
             st.write("### Imagem Original")
             st.image(image, use_container_width=True)
 
-            st.write("### Resultado")
-            st.image(
-                img_result,
-                use_container_width=True,
-                caption="Imagem Binária"
-            )
+            if comparar_opencv:
 
-            image_bytes = convert_numpy_to_downloadable_image(
-                img_result
-            )
+                _, img_opencv = cv2.threshold(
+                    img_gray,
+                    threshold_value,
+                    255,
+                    cv2.THRESH_BINARY
+                )
+
+                difference = cv2.absdiff(
+                    img_manual,
+                    img_opencv
+                )
+
+                st.write("### Comparação Manual vs OpenCV")
+
+                col_a, col_b, col_c = st.columns(3)
+
+                with col_a:
+                    st.image(
+                        img_manual,
+                        use_container_width=True,
+                        caption="Implementação Manual"
+                    )
+
+                with col_b:
+                    st.image(
+                        img_opencv,
+                        use_container_width=True,
+                        caption="OpenCV"
+                    )
+
+                with col_c:
+                    st.image(
+                        difference,
+                        use_container_width=True,
+                        caption="Diferença (Preto = Idêntico)"
+                    )
+
+                image_bytes = convert_numpy_to_downloadable_image(
+                    img_manual
+                )
+
+            else:
+
+                st.write("### Resultado")
+                st.image(
+                    img_manual,
+                    use_container_width=True,
+                    caption="Imagem Binária"
+                )
+
+                image_bytes = convert_numpy_to_downloadable_image(
+                    img_manual
+                )
 
             st.download_button(
                 label="Download da Imagem Processada",
@@ -777,24 +826,78 @@ if img_array is not None:
                 step=2
             )
 
-            img_result = dilation_manual(
+            img_manual = dilation_manual(
                 img_binary,
                 kernel_size
+            )
+
+            comparar_opencv = st.checkbox(
+                "Comparar com OpenCV?"
             )
 
             st.write("### Imagem Original")
             st.image(image, use_container_width=True)
 
-            st.write("### Resultado")
-            st.image(
-                img_result,
-                use_container_width=True,
-                caption=f"Dilatação com Kernel {kernel_size}x{kernel_size}"
-            )
+            if comparar_opencv:
 
-            image_bytes = convert_numpy_to_downloadable_image(
-                img_result
-            )
+                # Criar kernel para OpenCV
+                kernel = cv2.getStructuringElement(
+                    cv2.MORPH_ELLIPSE,
+                    (kernel_size, kernel_size)
+                )
+
+                img_opencv = cv2.dilate(
+                    img_binary,
+                    kernel,
+                    iterations=1
+                )
+
+                difference = cv2.absdiff(
+                    img_manual,
+                    img_opencv
+                )
+
+                st.write("### Comparação Manual vs OpenCV")
+
+                col_a, col_b, col_c = st.columns(3)
+
+                with col_a:
+                    st.image(
+                        img_manual,
+                        use_container_width=True,
+                        caption="Implementação Manual"
+                    )
+
+                with col_b:
+                    st.image(
+                        img_opencv,
+                        use_container_width=True,
+                        caption="OpenCV"
+                    )
+
+                with col_c:
+                    st.image(
+                        difference,
+                        use_container_width=True,
+                        caption="Diferença (Preto = Idêntico)"
+                    )
+
+                image_bytes = convert_numpy_to_downloadable_image(
+                    img_manual
+                )
+
+            else:
+
+                st.write("### Resultado")
+                st.image(
+                    img_manual,
+                    use_container_width=True,
+                    caption=f"Dilatação com Kernel {kernel_size}x{kernel_size}"
+                )
+
+                image_bytes = convert_numpy_to_downloadable_image(
+                    img_manual
+                )
 
             st.download_button(
                 label="Download da Imagem Processada",
@@ -862,24 +965,78 @@ if img_array is not None:
                 step=2
             )
 
-            img_result = erosion_manual(
+            img_manual = erosion_manual(
                 img_binary,
                 kernel_size
+            )
+
+            comparar_opencv = st.checkbox(
+                "Comparar com OpenCV?"
             )
 
             st.write("### Imagem Original")
             st.image(image, use_container_width=True)
 
-            st.write("### Resultado")
-            st.image(
-                img_result,
-                use_container_width=True,
-                caption=f"Erosão com Kernel {kernel_size}x{kernel_size}"
-            )
+            if comparar_opencv:
 
-            image_bytes = convert_numpy_to_downloadable_image(
-                img_result
-            )
+                # Criar kernel para OpenCV
+                kernel = cv2.getStructuringElement(
+                    cv2.MORPH_ELLIPSE,
+                    (kernel_size, kernel_size)
+                )
+
+                img_opencv = cv2.erode(
+                    img_binary,
+                    kernel,
+                    iterations=1
+                )
+
+                difference = cv2.absdiff(
+                    img_manual,
+                    img_opencv
+                )
+
+                st.write("### Comparação Manual vs OpenCV")
+
+                col_a, col_b, col_c = st.columns(3)
+
+                with col_a:
+                    st.image(
+                        img_manual,
+                        use_container_width=True,
+                        caption="Implementação Manual"
+                    )
+
+                with col_b:
+                    st.image(
+                        img_opencv,
+                        use_container_width=True,
+                        caption="OpenCV"
+                    )
+
+                with col_c:
+                    st.image(
+                        difference,
+                        use_container_width=True,
+                        caption="Diferença (Preto = Idêntico)"
+                    )
+
+                image_bytes = convert_numpy_to_downloadable_image(
+                    img_manual
+                )
+
+            else:
+
+                st.write("### Resultado")
+                st.image(
+                    img_manual,
+                    use_container_width=True,
+                    caption=f"Erosão com Kernel {kernel_size}x{kernel_size}"
+                )
+
+                image_bytes = convert_numpy_to_downloadable_image(
+                    img_manual
+                )
 
             st.download_button(
                 label="Download da Imagem Processada",
@@ -950,24 +1107,79 @@ if img_array is not None:
                 step=2
             )
 
-            img_result = opening_manual(
+            img_manual = opening_manual(
                 img_binary,
                 kernel_size
+            )
+
+            comparar_opencv = st.checkbox(
+                "Comparar com OpenCV?"
             )
 
             st.write("### Imagem Original")
             st.image(image, use_container_width=True)
 
-            st.write("### Resultado")
-            st.image(
-                img_result,
-                use_container_width=True,
-                caption=f"Abertura com Kernel {kernel_size}x{kernel_size}"
-            )
+            if comparar_opencv:
 
-            image_bytes = convert_numpy_to_downloadable_image(
-                img_result
-            )
+                # Criar kernel para OpenCV
+                kernel = cv2.getStructuringElement(
+                    cv2.MORPH_ELLIPSE,
+                    (kernel_size, kernel_size)
+                )
+
+                img_opencv = cv2.morphologyEx(
+                    img_binary,
+                    cv2.MORPH_OPEN,
+                    kernel,
+                    iterations=1
+                )
+
+                difference = cv2.absdiff(
+                    img_manual,
+                    img_opencv
+                )
+
+                st.write("### Comparação Manual vs OpenCV")
+
+                col_a, col_b, col_c = st.columns(3)
+
+                with col_a:
+                    st.image(
+                        img_manual,
+                        use_container_width=True,
+                        caption="Implementação Manual"
+                    )
+
+                with col_b:
+                    st.image(
+                        img_opencv,
+                        use_container_width=True,
+                        caption="OpenCV"
+                    )
+
+                with col_c:
+                    st.image(
+                        difference,
+                        use_container_width=True,
+                        caption="Diferença (Preto = Idêntico)"
+                    )
+
+                image_bytes = convert_numpy_to_downloadable_image(
+                    img_manual
+                )
+
+            else:
+
+                st.write("### Resultado")
+                st.image(
+                    img_manual,
+                    use_container_width=True,
+                    caption=f"Abertura com Kernel {kernel_size}x{kernel_size}"
+                )
+
+                image_bytes = convert_numpy_to_downloadable_image(
+                    img_manual
+                )
 
             st.download_button(
                 label="Download da Imagem Processada",
@@ -1036,24 +1248,79 @@ if img_array is not None:
                 step=2
             )
 
-            img_result = closing_manual(
+            img_manual = closing_manual(
                 img_binary,
                 kernel_size
+            )
+
+            comparar_opencv = st.checkbox(
+                "Comparar com OpenCV?"
             )
 
             st.write("### Imagem Original")
             st.image(image, use_container_width=True)
 
-            st.write("### Resultado")
-            st.image(
-                img_result,
-                use_container_width=True,
-                caption=f"Fecho com Kernel {kernel_size}x{kernel_size}"
-            )
+            if comparar_opencv:
 
-            image_bytes = convert_numpy_to_downloadable_image(
-                img_result
-            )
+                # Criar kernel para OpenCV
+                kernel = cv2.getStructuringElement(
+                    cv2.MORPH_ELLIPSE,
+                    (kernel_size, kernel_size)
+                )
+
+                img_opencv = cv2.morphologyEx(
+                    img_binary,
+                    cv2.MORPH_CLOSE,
+                    kernel,
+                    iterations=1
+                )
+
+                difference = cv2.absdiff(
+                    img_manual,
+                    img_opencv
+                )
+
+                st.write("### Comparação Manual vs OpenCV")
+
+                col_a, col_b, col_c = st.columns(3)
+
+                with col_a:
+                    st.image(
+                        img_manual,
+                        use_container_width=True,
+                        caption="Implementação Manual"
+                    )
+
+                with col_b:
+                    st.image(
+                        img_opencv,
+                        use_container_width=True,
+                        caption="OpenCV"
+                    )
+
+                with col_c:
+                    st.image(
+                        difference,
+                        use_container_width=True,
+                        caption="Diferença (Preto = Idêntico)"
+                    )
+
+                image_bytes = convert_numpy_to_downloadable_image(
+                    img_manual
+                )
+
+            else:
+
+                st.write("### Resultado")
+                st.image(
+                    img_manual,
+                    use_container_width=True,
+                    caption=f"Fecho com Kernel {kernel_size}x{kernel_size}"
+                )
+
+                image_bytes = convert_numpy_to_downloadable_image(
+                    img_manual
+                )
 
             st.download_button(
                 label="Download da Imagem Processada",
@@ -1239,23 +1506,71 @@ if img_array is not None:
         # ---------------------------------
         elif operacao == "Filtro Gaussiano":
 
-            img_result = gaussian_filter_manual(
+            img_manual = gaussian_filter_manual(
                 img_array
+            )
+
+            comparar_opencv = st.checkbox(
+                "Comparar com OpenCV?"
             )
 
             st.write("### Imagem Original")
             st.image(image, use_container_width=True)
 
-            st.write("### Resultado")
-            st.image(
-                img_result,
-                use_container_width=True,
-                caption="Filtro Gaussiano (Kernel 3x3)"
-            )
+            if comparar_opencv:
 
-            image_bytes = convert_numpy_to_downloadable_image(
-                img_result
-            )
+                img_opencv = cv2.GaussianBlur(
+                    img_array,
+                    (3, 3),
+                    0
+                )
+
+                difference = cv2.absdiff(
+                    img_manual,
+                    img_opencv
+                )
+
+                st.write("### Comparação Manual vs OpenCV")
+
+                col_a, col_b, col_c = st.columns(3)
+
+                with col_a:
+                    st.image(
+                        img_manual,
+                        use_container_width=True,
+                        caption="Implementação Manual"
+                    )
+
+                with col_b:
+                    st.image(
+                        img_opencv,
+                        use_container_width=True,
+                        caption="OpenCV"
+                    )
+
+                with col_c:
+                    st.image(
+                        difference,
+                        use_container_width=True,
+                        caption="Diferença (Preto = Idêntico)"
+                    )
+
+                image_bytes = convert_numpy_to_downloadable_image(
+                    img_manual
+                )
+
+            else:
+
+                st.write("### Resultado")
+                st.image(
+                    img_manual,
+                    use_container_width=True,
+                    caption="Filtro Gaussiano (Kernel 3x3)"
+                )
+
+                image_bytes = convert_numpy_to_downloadable_image(
+                    img_manual
+                )
 
             st.download_button(
                 label="Download da Imagem Processada",
@@ -1320,23 +1635,73 @@ if img_array is not None:
             else:
                 img_gray = img_array.copy()
 
-            img_result = sobel_manual(
+            img_manual = sobel_manual(
                 img_gray
+            )
+
+            comparar_opencv = st.checkbox(
+                "Comparar com OpenCV?"
             )
 
             st.write("### Imagem Original")
             st.image(image, use_container_width=True)
 
-            st.write("### Resultado")
-            st.image(
-                img_result,
-                use_container_width=True,
-                caption="Deteção de Contornos - Sobel"
-            )
+            if comparar_opencv:
 
-            image_bytes = convert_numpy_to_downloadable_image(
-                img_result
-            )
+                # Cálculo de Sobel com OpenCV
+                sobelx = cv2.Sobel(img_gray, cv2.CV_32F, 1, 0, ksize=3)
+                sobely = cv2.Sobel(img_gray, cv2.CV_32F, 0, 1, ksize=3)
+                
+                # Calcular magnitude
+                img_opencv = np.sqrt(sobelx**2 + sobely**2)
+                img_opencv = np.clip(img_opencv, 0, 255).astype(np.uint8)
+
+                difference = cv2.absdiff(
+                    img_manual,
+                    img_opencv
+                )
+
+                st.write("### Comparação Manual vs OpenCV")
+
+                col_a, col_b, col_c = st.columns(3)
+
+                with col_a:
+                    st.image(
+                        img_manual,
+                        use_container_width=True,
+                        caption="Implementação Manual"
+                    )
+
+                with col_b:
+                    st.image(
+                        img_opencv,
+                        use_container_width=True,
+                        caption="OpenCV"
+                    )
+
+                with col_c:
+                    st.image(
+                        difference,
+                        use_container_width=True,
+                        caption="Diferença (Preto = Idêntico)"
+                    )
+
+                image_bytes = convert_numpy_to_downloadable_image(
+                    img_manual
+                )
+
+            else:
+
+                st.write("### Resultado")
+                st.image(
+                    img_manual,
+                    use_container_width=True,
+                    caption="Deteção de Contornos - Sobel"
+                )
+
+                image_bytes = convert_numpy_to_downloadable_image(
+                    img_manual
+                )
 
             st.download_button(
                 label="Download da Imagem Processada",
@@ -1386,23 +1751,75 @@ if img_array is not None:
             else:
                 img_gray = img_array.copy()
 
-            img_result = prewitt_manual(
+            img_manual = prewitt_manual(
                 img_gray
+            )
+
+            comparar_opencv = st.checkbox(
+                "Comparar com OpenCV?"
             )
 
             st.write("### Imagem Original")
             st.image(image, use_container_width=True)
 
-            st.write("### Resultado")
-            st.image(
-                img_result,
-                use_container_width=True,
-                caption="Deteção de Contornos - Prewitt"
-            )
+            if comparar_opencv:
 
-            image_bytes = convert_numpy_to_downloadable_image(
-                img_result
-            )
+                # Cálculo de Prewitt com OpenCV (usando filtro customizado)
+                kernelx = np.array([[-1, 0, 1], [-1, 0, 1], [-1, 0, 1]], dtype=np.float32)
+                kernely = np.array([[-1, -1, -1], [0, 0, 0], [1, 1, 1]], dtype=np.float32)
+                
+                prewittx = cv2.filter2D(img_gray.astype(np.float32), -1, kernelx)
+                prewitty = cv2.filter2D(img_gray.astype(np.float32), -1, kernely)
+                
+                img_opencv = np.sqrt(prewittx**2 + prewitty**2)
+                img_opencv = np.clip(img_opencv, 0, 255).astype(np.uint8)
+
+                difference = cv2.absdiff(
+                    img_manual,
+                    img_opencv
+                )
+
+                st.write("### Comparação Manual vs OpenCV")
+
+                col_a, col_b, col_c = st.columns(3)
+
+                with col_a:
+                    st.image(
+                        img_manual,
+                        use_container_width=True,
+                        caption="Implementação Manual"
+                    )
+
+                with col_b:
+                    st.image(
+                        img_opencv,
+                        use_container_width=True,
+                        caption="OpenCV"
+                    )
+
+                with col_c:
+                    st.image(
+                        difference,
+                        use_container_width=True,
+                        caption="Diferença (Preto = Idêntico)"
+                    )
+
+                image_bytes = convert_numpy_to_downloadable_image(
+                    img_manual
+                )
+
+            else:
+
+                st.write("### Resultado")
+                st.image(
+                    img_manual,
+                    use_container_width=True,
+                    caption="Deteção de Contornos - Prewitt"
+                )
+
+                image_bytes = convert_numpy_to_downloadable_image(
+                    img_manual
+                )
 
             st.download_button(
                 label="Download da Imagem Processada",
@@ -1454,23 +1871,75 @@ if img_array is not None:
             else:
                 img_gray = img_array.copy()
 
-            img_result = roberts_manual(
+            img_manual = roberts_manual(
                 img_gray
+            )
+
+            comparar_opencv = st.checkbox(
+                "Comparar com OpenCV?"
             )
 
             st.write("### Imagem Original")
             st.image(image, use_container_width=True)
 
-            st.write("### Resultado")
-            st.image(
-                img_result,
-                use_container_width=True,
-                caption="Deteção de Contornos - Roberts"
-            )
+            if comparar_opencv:
 
-            image_bytes = convert_numpy_to_downloadable_image(
-                img_result
-            )
+                # Cálculo de Roberts com OpenCV (usando kernels Roberts)
+                kernelx = np.array([[1, 0], [0, -1]], dtype=np.float32)
+                kernely = np.array([[0, 1], [-1, 0]], dtype=np.float32)
+                
+                robertsx = cv2.filter2D(img_gray.astype(np.float32), -1, kernelx)
+                robertsy = cv2.filter2D(img_gray.astype(np.float32), -1, kernely)
+                
+                img_opencv = np.sqrt(robertsx**2 + robertsy**2)
+                img_opencv = np.clip(img_opencv, 0, 255).astype(np.uint8)
+
+                difference = cv2.absdiff(
+                    img_manual,
+                    img_opencv
+                )
+
+                st.write("### Comparação Manual vs OpenCV")
+
+                col_a, col_b, col_c = st.columns(3)
+
+                with col_a:
+                    st.image(
+                        img_manual,
+                        use_container_width=True,
+                        caption="Implementação Manual"
+                    )
+
+                with col_b:
+                    st.image(
+                        img_opencv,
+                        use_container_width=True,
+                        caption="OpenCV"
+                    )
+
+                with col_c:
+                    st.image(
+                        difference,
+                        use_container_width=True,
+                        caption="Diferença (Preto = Idêntico)"
+                    )
+
+                image_bytes = convert_numpy_to_downloadable_image(
+                    img_manual
+                )
+
+            else:
+
+                st.write("### Resultado")
+                st.image(
+                    img_manual,
+                    use_container_width=True,
+                    caption="Deteção de Contornos - Roberts"
+                )
+
+                image_bytes = convert_numpy_to_downloadable_image(
+                    img_manual
+                )
 
             st.download_button(
                 label="Download da Imagem Processada",
@@ -1522,23 +1991,76 @@ if img_array is not None:
             else:
                 img_gray = img_array.copy()
 
-            img_result = laplacian_manual(
+            img_manual = laplacian_manual(
                 img_gray
+            )
+
+            comparar_opencv = st.checkbox(
+                "Comparar com OpenCV?"
             )
 
             st.write("### Imagem Original")
             st.image(image, use_container_width=True)
 
-            st.write("### Resultado")
-            st.image(
-                img_result,
-                use_container_width=True,
-                caption="Deteção de Contornos - Laplaciano"
-            )
+            if comparar_opencv:
 
-            image_bytes = convert_numpy_to_downloadable_image(
-                img_result
-            )
+                img_opencv = cv2.Laplacian(
+                    img_gray,
+                    cv2.CV_32F
+                )
+
+                img_opencv = np.clip(
+                    np.abs(img_opencv),
+                    0,
+                    255
+                ).astype(np.uint8)
+
+                difference = cv2.absdiff(
+                    img_manual,
+                    img_opencv
+                )
+
+                st.write("### Comparação Manual vs OpenCV")
+
+                col_a, col_b, col_c = st.columns(3)
+
+                with col_a:
+                    st.image(
+                        img_manual,
+                        use_container_width=True,
+                        caption="Implementação Manual"
+                    )
+
+                with col_b:
+                    st.image(
+                        img_opencv,
+                        use_container_width=True,
+                        caption="OpenCV"
+                    )
+
+                with col_c:
+                    st.image(
+                        difference,
+                        use_container_width=True,
+                        caption="Diferença (Preto = Idêntico)"
+                    )
+
+                image_bytes = convert_numpy_to_downloadable_image(
+                    img_manual
+                )
+
+            else:
+
+                st.write("### Resultado")
+                st.image(
+                    img_manual,
+                    use_container_width=True,
+                    caption="Deteção de Contornos - Laplaciano"
+                )
+
+                image_bytes = convert_numpy_to_downloadable_image(
+                    img_manual
+                )
 
             st.download_button(
                 label="Download da Imagem Processada",
