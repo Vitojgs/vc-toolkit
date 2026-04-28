@@ -1,0 +1,20 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^pip list \\| grep -i opencv$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^python3 << 'EOFPYTHON'\nimport re\n\nwith open\\('/home/ugrt/Documents/vc-toolkit/app\\.py', 'r'\\) as f:\n    lines = f\\.readlines\\(\\)\n\n# Procurar por st\\.columns\\(3\\) e remover use_container_width=True das st\\.image dentro desses blocos\noutput = \\[\\]\nin_columns_3 = False\ncolumn_count = 0\ndepth = 0\n\nfor i, line in enumerate\\(lines\\):\n    if 'st\\.columns\\(3\\)' in line:\n        in_columns_3 = True\n        column_count = 0\n        depth = len\\(line\\) - len\\(line\\.lstrip\\(\\)\\)\n    \n    if in_columns_3:\n        # Se encontrar uma linha com mesma indentação ou menos, saímos do bloco\n        current_depth = len\\(line\\) - len\\(line\\.lstrip\\(\\)\\)\n        if current_depth <= depth and 'st\\.columns\\(3\\)' not in line and line\\.strip\\(\\) and not line\\.strip\\(\\)\\.startswith\\('with'\\):\n            in_columns_3 = False\n        \n        # Remover use_container_width=True dentro deste bloco\n        if 'use_container_width=True' in line and in_columns_3:\n            line = line\\.replace\\('use_container_width=True,\\\\n', ''\\)\\.replace\\('use_container_width=True', ''\\)\n            if line\\.strip\\(\\) == 'st\\.image\\(':  # Se ficou só com st\\.image\\(, manter assim\n                line = line  # não fazemos nada\n    \n    output\\.append\\(line\\)\n\nwith open\\('/home/ugrt/Documents/vc-toolkit/app\\.py', 'w'\\) as f:\n    f\\.writelines\\(output\\)\n\nprint\\(\"✓ Removidos use_container_width=True de todas as comparações de 3 colunas!\"\\)\nEOFPYTHON\n$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^python3 << 'EOFPYTHON'\nimport re\n\nwith open\\('/home/ugrt/Documents/vc-toolkit/app\\.py', 'r'\\) as f:\n    content = f\\.read\\(\\)\n\n# Remover a linha inteira com use_container_width=True, que está sempre sozinha após uma vírgula\npattern = r',\\\\s\\*\\\\n\\\\s\\+use_container_width=True'\ncontent = re\\.sub\\(pattern, '', content\\)\n\n# Também remover use_container_width=True quando é o único argumento\npattern2 = r'st\\\\\\.image\\\\\\(\\\\s\\*img_\\\\w\\+,\\\\s\\*use_container_width=True,'\ncontent = re\\.sub\\(pattern2, r'st\\.image\\(\\\\n                        img_result,', content\\)\n\nwith open\\('/home/ugrt/Documents/vc-toolkit/app\\.py', 'w'\\) as f:\n    f\\.write\\(content\\)\n\nprint\\(\"✓ Formatação corrigida!\"\\)\nEOFPYTHON\n$/": {
+            "approve": true,
+            "matchCommandLine": true
+        },
+        "/^python3 << 'EOFPYTHON'\nwith open\\('/home/ugrt/Documents/vc-toolkit/app\\.py', 'r'\\) as f:\n    lines = f\\.readlines\\(\\)\n\n# Remover linhas que têm só espaços em branco antes de caption=\noutput = \\[\\]\nfor i, line in enumerate\\(lines\\):\n    # Se a linha tem só espaços brancos/vazios antes de caption=, remover espaços extras\n    if 'caption=' in line and line\\.strip\\(\\)\\.startswith\\('caption='\\):\n        # Remover espaços extras no início\n        line = '                        ' \\+ line\\.lstrip\\(\\)\n    output\\.append\\(line\\)\n\nwith open\\('/home/ugrt/Documents/vc-toolkit/app\\.py', 'w'\\) as f:\n    f\\.writelines\\(output\\)\n\nprint\\(\"✓ Indentação corrigida!\"\\)\nEOFPYTHON\n$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}

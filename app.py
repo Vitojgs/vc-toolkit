@@ -170,8 +170,7 @@ if img_array is not None:
         st.subheader("Imagem Original")
 
         st.image(
-            image,
-            use_container_width=True
+            image
         )
 
         st.write(f"Dimensões: {img_array.shape}")
@@ -239,22 +238,19 @@ if img_array is not None:
                     with col_a:
                         st.image(
                             img_manual,
-                            use_container_width=True,
-                            caption="Implementação Manual"
+                        caption="Implementação Manual"
                         )
 
                     with col_b:
                         st.image(
                             img_opencv,
-                            use_container_width=True,
-                            caption="OpenCV"
+                        caption="OpenCV"
                         )
 
                     with col_c:
                         st.image(
                             difference,
-                            use_container_width=True,
-                            caption="Diferença"
+                        caption="Diferença"
                         )
 
                 else:
@@ -263,7 +259,6 @@ if img_array is not None:
 
                     st.image(
                         img_manual,
-                        use_container_width=True,
                         caption="Conversão Manual RGB para Gray"
                     )
 
@@ -311,14 +306,10 @@ if img_array is not None:
 
                 img_result = rgb_negative_manual(img_array)
 
-                st.write("### Imagem Original")
-                st.image(image, use_container_width=True)
-
                 st.write("### Resultado")
                 st.image(
                     img_result,
-                    use_container_width=True,
-                    caption="Negativo Manual RGB"
+                        caption="Negativo Manual RGB"
                 )
 
                 image_bytes = convert_numpy_to_downloadable_image(
@@ -391,14 +382,10 @@ if img_array is not None:
                     channel_index
                 )
 
-                st.write("### Imagem Original")
-                st.image(image, use_container_width=True)
-
                 st.write("### Resultado")
                 st.image(
                     img_result,
-                    use_container_width=True,
-                    caption=f"Canal Extraído: {canal}"
+                        caption=f"Canal Extraído: {canal}"
                 )
 
                 image_bytes = convert_numpy_to_downloadable_image(
@@ -452,30 +439,24 @@ if img_array is not None:
                 s_channel = img_hsv[:, :, 1]
                 v_channel = img_hsv[:, :, 2]
 
-                st.write("### Imagem Original")
-                st.image(image, use_container_width=True)
-
                 st.write("### Resultado")
                 col_h, col_s, col_v = st.columns(3)
 
                 with col_h:
                     st.image(
                         h_channel,
-                        use_container_width=True,
                         caption="Canal H (Hue)"
                     )
 
                 with col_s:
                     st.image(
                         s_channel,
-                        use_container_width=True,
                         caption="Canal S (Saturation)"
                     )
 
                 with col_v:
                     st.image(
                         v_channel,
-                        use_container_width=True,
                         caption="Canal V (Value)"
                     )
 
@@ -533,14 +514,10 @@ if img_array is not None:
                     v_min, v_max
                 )
 
-                st.write("### Imagem Original")
-                st.image(image, use_container_width=True)
-
                 st.write("### Resultado")
                 st.image(
                     img_result,
-                    use_container_width=True,
-                    caption="Máscara Binária da Segmentação HSV"
+                        caption="Máscara Binária da Segmentação HSV"
                 )
 
                 image_bytes = convert_numpy_to_downloadable_image(
@@ -619,9 +596,6 @@ if img_array is not None:
                 "Comparar com OpenCV?"
             )
 
-            st.write("### Imagem Original")
-            st.image(image, use_container_width=True)
-
             if comparar_opencv:
 
                 _, img_opencv = cv2.threshold(
@@ -643,21 +617,18 @@ if img_array is not None:
                 with col_a:
                     st.image(
                         img_manual,
-                        use_container_width=True,
                         caption="Implementação Manual"
                     )
 
                 with col_b:
                     st.image(
                         img_opencv,
-                        use_container_width=True,
                         caption="OpenCV"
                     )
 
                 with col_c:
                     st.image(
                         difference,
-                        use_container_width=True,
                         caption="Diferença (Preto = Idêntico)"
                     )
 
@@ -670,7 +641,6 @@ if img_array is not None:
                 st.write("### Resultado")
                 st.image(
                     img_manual,
-                    use_container_width=True,
                     caption="Imagem Binária"
                 )
 
@@ -729,17 +699,13 @@ if img_array is not None:
                 img_gray
             )
 
-            st.write("### Imagem Original")
-            st.image(image, use_container_width=True)
-
             st.write("### Threshold Calculado")
             st.success(f"Threshold automático calculado: {threshold_value}")
 
             st.write("### Resultado")
             st.image(
                 img_result,
-                use_container_width=True,
-                caption="Imagem Binária por Média Global"
+                        caption="Imagem Binária por Média Global"
             )
 
             image_bytes = convert_numpy_to_downloadable_image(
@@ -835,9 +801,6 @@ if img_array is not None:
                 "Comparar com OpenCV?"
             )
 
-            st.write("### Imagem Original")
-            st.image(image, use_container_width=True)
-
             if comparar_opencv:
 
                 # Criar kernel para OpenCV
@@ -864,21 +827,18 @@ if img_array is not None:
                 with col_a:
                     st.image(
                         img_manual,
-                        use_container_width=True,
                         caption="Implementação Manual"
                     )
 
                 with col_b:
                     st.image(
                         img_opencv,
-                        use_container_width=True,
                         caption="OpenCV"
                     )
 
                 with col_c:
                     st.image(
                         difference,
-                        use_container_width=True,
                         caption="Diferença (Preto = Idêntico)"
                     )
 
@@ -891,8 +851,7 @@ if img_array is not None:
                 st.write("### Resultado")
                 st.image(
                     img_manual,
-                    use_container_width=True,
-                    caption=f"Dilatação com Kernel {kernel_size}x{kernel_size}"
+                        caption=f"Dilatação com Kernel {kernel_size}x{kernel_size}"
                 )
 
                 image_bytes = convert_numpy_to_downloadable_image(
@@ -974,9 +933,6 @@ if img_array is not None:
                 "Comparar com OpenCV?"
             )
 
-            st.write("### Imagem Original")
-            st.image(image, use_container_width=True)
-
             if comparar_opencv:
 
                 # Criar kernel para OpenCV
@@ -1003,21 +959,18 @@ if img_array is not None:
                 with col_a:
                     st.image(
                         img_manual,
-                        use_container_width=True,
                         caption="Implementação Manual"
                     )
 
                 with col_b:
                     st.image(
                         img_opencv,
-                        use_container_width=True,
                         caption="OpenCV"
                     )
 
                 with col_c:
                     st.image(
                         difference,
-                        use_container_width=True,
                         caption="Diferença (Preto = Idêntico)"
                     )
 
@@ -1030,8 +983,7 @@ if img_array is not None:
                 st.write("### Resultado")
                 st.image(
                     img_manual,
-                    use_container_width=True,
-                    caption=f"Erosão com Kernel {kernel_size}x{kernel_size}"
+                        caption=f"Erosão com Kernel {kernel_size}x{kernel_size}"
                 )
 
                 image_bytes = convert_numpy_to_downloadable_image(
@@ -1116,9 +1068,6 @@ if img_array is not None:
                 "Comparar com OpenCV?"
             )
 
-            st.write("### Imagem Original")
-            st.image(image, use_container_width=True)
-
             if comparar_opencv:
 
                 # Criar kernel para OpenCV
@@ -1146,21 +1095,18 @@ if img_array is not None:
                 with col_a:
                     st.image(
                         img_manual,
-                        use_container_width=True,
                         caption="Implementação Manual"
                     )
 
                 with col_b:
                     st.image(
                         img_opencv,
-                        use_container_width=True,
                         caption="OpenCV"
                     )
 
                 with col_c:
                     st.image(
                         difference,
-                        use_container_width=True,
                         caption="Diferença (Preto = Idêntico)"
                     )
 
@@ -1173,8 +1119,7 @@ if img_array is not None:
                 st.write("### Resultado")
                 st.image(
                     img_manual,
-                    use_container_width=True,
-                    caption=f"Abertura com Kernel {kernel_size}x{kernel_size}"
+                        caption=f"Abertura com Kernel {kernel_size}x{kernel_size}"
                 )
 
                 image_bytes = convert_numpy_to_downloadable_image(
@@ -1257,9 +1202,6 @@ if img_array is not None:
                 "Comparar com OpenCV?"
             )
 
-            st.write("### Imagem Original")
-            st.image(image, use_container_width=True)
-
             if comparar_opencv:
 
                 # Criar kernel para OpenCV
@@ -1287,21 +1229,18 @@ if img_array is not None:
                 with col_a:
                     st.image(
                         img_manual,
-                        use_container_width=True,
                         caption="Implementação Manual"
                     )
 
                 with col_b:
                     st.image(
                         img_opencv,
-                        use_container_width=True,
                         caption="OpenCV"
                     )
 
                 with col_c:
                     st.image(
                         difference,
-                        use_container_width=True,
                         caption="Diferença (Preto = Idêntico)"
                     )
 
@@ -1314,8 +1253,7 @@ if img_array is not None:
                 st.write("### Resultado")
                 st.image(
                     img_manual,
-                    use_container_width=True,
-                    caption=f"Fecho com Kernel {kernel_size}x{kernel_size}"
+                        caption=f"Fecho com Kernel {kernel_size}x{kernel_size}"
                 )
 
                 image_bytes = convert_numpy_to_downloadable_image(
@@ -1388,14 +1326,10 @@ if img_array is not None:
                 kernel_size
             )
 
-            st.write("### Imagem Original")
-            st.image(image, use_container_width=True)
-
             st.write("### Resultado")
             st.image(
                 img_result,
-                use_container_width=True,
-                caption=f"Filtro da Média ({kernel_size}x{kernel_size})"
+                        caption=f"Filtro da Média ({kernel_size}x{kernel_size})"
             )
 
             image_bytes = convert_numpy_to_downloadable_image(
@@ -1454,14 +1388,10 @@ if img_array is not None:
                 kernel_size
             )
 
-            st.write("### Imagem Original")
-            st.image(image, use_container_width=True)
-
             st.write("### Resultado")
             st.image(
                 img_result,
-                use_container_width=True,
-                caption=f"Filtro da Mediana ({kernel_size}x{kernel_size})"
+                        caption=f"Filtro da Mediana ({kernel_size}x{kernel_size})"
             )
 
             image_bytes = convert_numpy_to_downloadable_image(
@@ -1515,9 +1445,6 @@ if img_array is not None:
                 "Comparar com OpenCV?"
             )
 
-            st.write("### Imagem Original")
-            st.image(image, use_container_width=True)
-
             if comparar_opencv:
 
                 img_opencv = cv2.GaussianBlur(
@@ -1538,21 +1465,18 @@ if img_array is not None:
                 with col_a:
                     st.image(
                         img_manual,
-                        use_container_width=True,
                         caption="Implementação Manual"
                     )
 
                 with col_b:
                     st.image(
                         img_opencv,
-                        use_container_width=True,
                         caption="OpenCV"
                     )
 
                 with col_c:
                     st.image(
                         difference,
-                        use_container_width=True,
                         caption="Diferença (Preto = Idêntico)"
                     )
 
@@ -1565,8 +1489,7 @@ if img_array is not None:
                 st.write("### Resultado")
                 st.image(
                     img_manual,
-                    use_container_width=True,
-                    caption="Filtro Gaussiano (Kernel 3x3)"
+                        caption="Filtro Gaussiano (Kernel 3x3)"
                 )
 
                 image_bytes = convert_numpy_to_downloadable_image(
@@ -1644,9 +1567,6 @@ if img_array is not None:
                 "Comparar com OpenCV?"
             )
 
-            st.write("### Imagem Original")
-            st.image(image, use_container_width=True)
-
             if comparar_opencv:
 
                 # Cálculo de Sobel com OpenCV
@@ -1669,21 +1589,18 @@ if img_array is not None:
                 with col_a:
                     st.image(
                         img_manual,
-                        use_container_width=True,
                         caption="Implementação Manual"
                     )
 
                 with col_b:
                     st.image(
                         img_opencv,
-                        use_container_width=True,
                         caption="OpenCV"
                     )
 
                 with col_c:
                     st.image(
                         difference,
-                        use_container_width=True,
                         caption="Diferença (Preto = Idêntico)"
                     )
 
@@ -1696,8 +1613,7 @@ if img_array is not None:
                 st.write("### Resultado")
                 st.image(
                     img_manual,
-                    use_container_width=True,
-                    caption="Deteção de Contornos - Sobel"
+                        caption="Deteção de Contornos - Sobel"
                 )
 
                 image_bytes = convert_numpy_to_downloadable_image(
@@ -1760,9 +1676,6 @@ if img_array is not None:
                 "Comparar com OpenCV?"
             )
 
-            st.write("### Imagem Original")
-            st.image(image, use_container_width=True)
-
             if comparar_opencv:
 
                 # Cálculo de Prewitt com OpenCV (usando filtro customizado)
@@ -1787,21 +1700,18 @@ if img_array is not None:
                 with col_a:
                     st.image(
                         img_manual,
-                        use_container_width=True,
                         caption="Implementação Manual"
                     )
 
                 with col_b:
                     st.image(
                         img_opencv,
-                        use_container_width=True,
                         caption="OpenCV"
                     )
 
                 with col_c:
                     st.image(
                         difference,
-                        use_container_width=True,
                         caption="Diferença (Preto = Idêntico)"
                     )
 
@@ -1814,8 +1724,7 @@ if img_array is not None:
                 st.write("### Resultado")
                 st.image(
                     img_manual,
-                    use_container_width=True,
-                    caption="Deteção de Contornos - Prewitt"
+                        caption="Deteção de Contornos - Prewitt"
                 )
 
                 image_bytes = convert_numpy_to_downloadable_image(
@@ -1880,9 +1789,6 @@ if img_array is not None:
                 "Comparar com OpenCV?"
             )
 
-            st.write("### Imagem Original")
-            st.image(image, use_container_width=True)
-
             if comparar_opencv:
 
                 # Cálculo de Roberts com OpenCV (usando kernels Roberts)
@@ -1907,21 +1813,18 @@ if img_array is not None:
                 with col_a:
                     st.image(
                         img_manual,
-                        use_container_width=True,
                         caption="Implementação Manual"
                     )
 
                 with col_b:
                     st.image(
                         img_opencv,
-                        use_container_width=True,
                         caption="OpenCV"
                     )
 
                 with col_c:
                     st.image(
                         difference,
-                        use_container_width=True,
                         caption="Diferença (Preto = Idêntico)"
                     )
 
@@ -1934,8 +1837,7 @@ if img_array is not None:
                 st.write("### Resultado")
                 st.image(
                     img_manual,
-                    use_container_width=True,
-                    caption="Deteção de Contornos - Roberts"
+                        caption="Deteção de Contornos - Roberts"
                 )
 
                 image_bytes = convert_numpy_to_downloadable_image(
@@ -2000,9 +1902,6 @@ if img_array is not None:
                 "Comparar com OpenCV?"
             )
 
-            st.write("### Imagem Original")
-            st.image(image, use_container_width=True)
-
             if comparar_opencv:
 
                 img_opencv = cv2.Laplacian(
@@ -2028,21 +1927,18 @@ if img_array is not None:
                 with col_a:
                     st.image(
                         img_manual,
-                        use_container_width=True,
                         caption="Implementação Manual"
                     )
 
                 with col_b:
                     st.image(
                         img_opencv,
-                        use_container_width=True,
                         caption="OpenCV"
                     )
 
                 with col_c:
                     st.image(
                         difference,
-                        use_container_width=True,
                         caption="Diferença (Preto = Idêntico)"
                     )
 
@@ -2055,8 +1951,7 @@ if img_array is not None:
                 st.write("### Resultado")
                 st.image(
                     img_manual,
-                    use_container_width=True,
-                    caption="Deteção de Contornos - Laplaciano"
+                        caption="Deteção de Contornos - Laplaciano"
                 )
 
                 image_bytes = convert_numpy_to_downloadable_image(
@@ -2131,15 +2026,11 @@ if img_array is not None:
                 img_gray
             )
 
-            st.write("### Imagem Original")
-            st.image(image, use_container_width=True)
-
             st.write("### Resultado")
 
             st.image(
                 img_gray,
-                use_container_width=True,
-                caption="Imagem em Tons de Cinzento"
+                        caption="Imagem em Tons de Cinzento"
             )
 
             st.write("### Gráfico do Histograma")
@@ -2210,9 +2101,6 @@ if img_array is not None:
                 img_result
             )
 
-            st.write("### Imagem Original")
-            st.image(image, use_container_width=True)
-
             st.write("### Resultado")
 
             col_a, col_b = st.columns(2)
@@ -2220,15 +2108,13 @@ if img_array is not None:
             with col_a:
                 st.image(
                     img_gray,
-                    use_container_width=True,
-                    caption="Imagem Original"
+                        caption="Imagem Original"
                 )
 
             with col_b:
                 st.image(
                     img_result,
-                    use_container_width=True,
-                    caption="Imagem Equalizada"
+                        caption="Imagem Equalizada"
                 )
 
             image_bytes = convert_numpy_to_downloadable_image(
@@ -2350,9 +2236,6 @@ if img_array is not None:
             else:
                 img_labels = labels.astype(np.uint8)
 
-            st.write("### Imagem Original")
-            st.image(image, use_container_width=True)
-
             st.write("### Número de Blobs Detectados")
 
             st.success(f"Total de blobs encontrados: {total_blobs}")
@@ -2364,15 +2247,13 @@ if img_array is not None:
             with col_a:
                 st.image(
                     img_binary,
-                    use_container_width=True,
-                    caption="Imagem Binária"
+                        caption="Imagem Binária"
                 )
 
             with col_b:
                 st.image(
                     img_labels,
-                    use_container_width=True,
-                    caption="Imagem Etiquetada"
+                        caption="Imagem Etiquetada"
                 )
 
             st.write("### Explicação Teórica")
@@ -2437,9 +2318,6 @@ if img_array is not None:
                 total_blobs
             )
 
-            st.write("### Imagem Original")
-            st.image(image, use_container_width=True)
-
             st.write("### Resultado")
 
             col_bin, col_labeled = st.columns(2)
@@ -2447,16 +2325,14 @@ if img_array is not None:
             with col_bin:
                 st.image(
                     img_binary,
-                    use_container_width=True,
-                    caption="Imagem Binária"
+                        caption="Imagem Binária"
                 )
 
             with col_labeled:
                 img_labeled_colored = colorize_labels(labels)
                 st.image(
                     img_labeled_colored,
-                    use_container_width=True,
-                    caption="Imagem Etiquetada (Colorida)"
+                        caption="Imagem Etiquetada (Colorida)"
                 )
 
             st.write("### Propriedades dos Blobs")
@@ -2551,9 +2427,6 @@ if img_array is not None:
                 img_gray
             )
 
-            st.write("### Imagem Original")
-            st.image(image, use_container_width=True)
-
             st.write("### Resultado")
 
             col_a, col_b = st.columns(2)
@@ -2561,15 +2434,13 @@ if img_array is not None:
             with col_a:
                 st.image(
                     img_gray,
-                    use_container_width=True,
-                    caption="Imagem em Tons de Cinzento"
+                        caption="Imagem em Tons de Cinzento"
                 )
 
             with col_b:
                 st.image(
                     img_result,
-                    use_container_width=True,
-                    caption="Espectro de Frequências (FFT)"
+                        caption="Espectro de Frequências (FFT)"
                 )
             image_bytes = convert_numpy_to_downloadable_image(
                 img_result
@@ -2681,15 +2552,13 @@ if img_array is not None:
             with col_a:
                 st.image(
                     img_gray,
-                    use_container_width=True,
-                    caption="Imagem Original"
+                        caption="Imagem Original"
                 )
 
             with col_b:
                 st.image(
                     img_result,
-                    use_container_width=True,
-                    caption=f"Filtro Passa-Baixo FFT (Raio = {radius})"
+                        caption=f"Filtro Passa-Baixo FFT (Raio = {radius})"
                 )
 
             image_bytes = convert_numpy_to_downloadable_image(
@@ -2769,15 +2638,13 @@ if img_array is not None:
             with col_a:
                 st.image(
                     img_gray,
-                    use_container_width=True,
-                    caption="Imagem Original"
+                        caption="Imagem Original"
                 )
 
             with col_b:
                 st.image(
                     img_result,
-                    use_container_width=True,
-                    caption=f"Filtro Passa-Alto FFT (Raio = {radius})"
+                        caption=f"Filtro Passa-Alto FFT (Raio = {radius})"
                 )
             image_bytes = convert_numpy_to_downloadable_image(
                img_result
